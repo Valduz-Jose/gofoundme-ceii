@@ -1,5 +1,25 @@
 export type Currency = "usd" | "ves_bcv" | "ves_parallel" | "eur" | "cop";
 
+export type PaymentCategory =
+  | "venezuela"
+  | "international"
+  | "colombia"
+  | "crypto"
+  | "contact";
+
+export interface PaymentMethod {
+  id: string;
+  category: PaymentCategory;
+  name: string;
+  icon: string | null;
+  fields: Record<string, string>;
+  notes: string | null;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export type EquipmentStatus = "pendiente" | "comprado";
 
 export interface Equipment {

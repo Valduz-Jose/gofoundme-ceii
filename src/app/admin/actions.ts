@@ -88,6 +88,73 @@ export async function updateEquipment(id: string, formData: FormData) {
   redirect("/admin/equipment");
 }
 
+// ─── Payment Methods ──────────────────────────────────────────────────────────
+
+function parseFields(formData: FormData): Record<string, string> {
+  try {
+    return JSON.parse(formData.get("fields_json") as string) as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+export async function createPaymentMethod(formData: FormData) {
+  await requireAuth();
+  const supabase = createServiceClient();
+
+  await supabase.from("payment_methods").insert({
+    category: formData.get("category") as string,
+    name: formData.get("name") as string,
+    icon: (formData.get("icon") as string) || null,
+    fields: parseFields(formData),
+    notes: (formData.get("notes") as string) || null,
+    sort_order: parseInt(formData.get("sort_order") as string) || 0,
+    is_active: formData.get("is_active") === "on",
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin/payment-methods");
+  redirect("/admin/payment-methods");
+}
+
+export async function updatePaymentMethod(id: string, formData: FormData) {
+  await requireAuth();
+  const supabase = createServiceClient();
+
+  await supabase
+    .from("payment_methods")
+    .update({
+      category: formData.get("category") as string,
+      name: formData.get("name") as string,
+      icon: (formData.get("icon") as string) || null,
+      fields: parseFields(formData),
+      notes: (formData.get("notes") as string) || null,
+      sort_order: parseInt(formData.get("sort_order") as string) || 0,
+      is_active: formData.get("is_active") === "on",
+    })
+    .eq("id", id);
+
+  revalidatePath("/");
+  revalidatePath("/admin/payment-methods");
+  redirect("/admin/payment-methods");
+}
+
+export async function deletePaymentMethod(id: string) {
+  await requireAuth();
+  const supabase = createServiceClient();
+  await supabase.from("payment_methods").delete().eq("id", id);
+  revalidatePath("/");
+  revalidatePath("/admin/payment-methods");
+}
+
+export async function togglePaymentMethodActive(id: string, isActive: boolean) {
+  await requireAuth();
+  const supabase = createServiceClient();
+  await supabase.from("payment_methods").update({ is_active: isActive }).eq("id", id);
+  revalidatePath("/");
+  revalidatePath("/admin/payment-methods");
+}
+
 // ─── Settings ─────────────────────────────────────────────────────────────────
 
 export async function updateSettings(formData: FormData) {

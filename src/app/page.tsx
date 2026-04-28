@@ -1,8 +1,10 @@
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { getExchangeRates } from "@/lib/exchange/rates";
+import { getActivePaymentMethods } from "@/lib/supabase/payment-methods";
 import ProgressBar from "@/components/features/progress-bar";
 import CurrencyDisplay from "@/components/features/currency-display";
+import DonateButton from "@/components/features/donate-button";
 import EquipmentList from "@/components/features/equipment-list";
 import DonorList from "@/components/features/donor-list";
 import type { Donation, Equipment } from "@/types";
@@ -12,12 +14,14 @@ export const revalidate = 60;
 async function getPageData() {
   const supabase = createClient();
 
-  const [configResult, equipmentResult, donationsResult, rates] = await Promise.all([
-    supabase.from("site_config").select("key, value"),
-    supabase.from("equipment").select("*").order("sort_order"),
-    supabase.from("donations").select("*").order("created_at", { ascending: false }),
-    getExchangeRates(),
-  ]);
+  const [configResult, equipmentResult, donationsResult, rates, paymentMethods] =
+    await Promise.all([
+      supabase.from("site_config").select("key, value"),
+      supabase.from("equipment").select("*").order("sort_order"),
+      supabase.from("donations").select("*").order("created_at", { ascending: false }),
+      getExchangeRates(),
+      getActivePaymentMethods(),
+    ]);
 
   const config = Object.fromEntries(
     (configResult.data ?? []).map((c) => [c.key, c.value])
@@ -36,6 +40,7 @@ async function getPageData() {
     donations,
     totalRaisedUsd,
     rates,
+    paymentMethods,
   };
 }
 
@@ -48,6 +53,7 @@ export default async function Home() {
     donations,
     totalRaisedUsd,
     rates,
+    paymentMethods,
   } = await getPageData();
 
   const progressPercent = goalAmountUsd > 0 ? (totalRaisedUsd / goalAmountUsd) * 100 : 0;
@@ -93,6 +99,7 @@ export default async function Home() {
                 </span>
                 <span>{Math.min(progressPercent, 100).toFixed(1)}% de la meta</span>
               </div>
+              <DonateButton methods={paymentMethods} />
             </div>
           </div>
 

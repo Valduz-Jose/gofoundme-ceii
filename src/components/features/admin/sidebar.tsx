@@ -6,10 +6,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const NAV_ITEMS = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
-  { href: "/admin/donations", label: "Donaciones", icon: "💚" },
-  { href: "/admin/equipment", label: "Equipos", icon: "📡" },
-  { href: "/admin/settings", label: "Configuración", icon: "⚙️" },
+  { href: "/admin/dashboard",        label: "Dashboard",         icon: "📊" },
+  { href: "/admin/donations",        label: "Donaciones",        icon: "💚" },
+  { href: "/admin/equipment",        label: "Equipos",           icon: "📡" },
+  { href: "/admin/payment-methods",  label: "Métodos de pago",   icon: "💳" },
+  { href: "/admin/settings",         label: "Configuración",     icon: "⚙️" },
 ];
 
 export default function AdminSidebar() {
