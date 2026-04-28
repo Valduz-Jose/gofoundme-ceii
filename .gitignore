@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# env — NUNCA subir al repo
+.env*
+.env.local
+.env*.local
+
+# OS
+.DS_Store
+
+# Claude Code local settings
+.claude/
+
+# Nested/duplicate project directory
+gofoundme-ceii/
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
