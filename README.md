@@ -1,36 +1,220 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GoFundMe CEII — Plataforma de Recaudación de Fondos
 
-## Getting Started
+> A full-stack fundraising platform with real-time progress tracking, multi-currency display, and a complete admin panel — built for a real campaign.
 
-First, run the development server:
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js&logoColor=white)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000?logo=vercel&logoColor=white)](https://vercel.com)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
+<br>
+
+![GoFundMe CEII preview](public/preview.png)
+
+<div align="center">
+
+[🌐 Live Demo](https://gofoundme-ceii.vercel.app) &nbsp;·&nbsp; [📋 Report Bug](https://github.com/Valduz-Jose/gofoundme-ceii/issues)
+
+</div>
+
+---
+
+## About
+
+**El Centro de Informática CEII** es la organización estudiantil de Ingeniería en Informática de la UNET (Venezuela). Con internet limitado o inexistente en su sede, los estudiantes no pueden acceder a recursos en línea, herramientas de desarrollo ni comunicarse con el exterior. Esta plataforma fue creada para recaudar **$1,329 USD** destinados a la compra e instalación de un kit Starlink y la infraestructura de red necesaria.
+
+Technically, this project goes beyond a simple donation page. It features a **live exchange rate engine** that converts the fundraising goal and progress into VES (BCV and parallel rates), EUR, and COP — currencies that donors actually use. All conversion data is pulled from the Venezuelan exchange rate API (`ve.dolarapi.com`) and cached intelligently with Next.js revalidation.
+
+The platform ships with a **fully decoupled admin panel** secured by Supabase Auth. Administrators can manage donations, equipment items, site configuration, and payment methods — all without touching a single line of code. The payment methods system uses a flexible JSONB schema that supports any payment flow (mobile payments, Zelle, crypto wallets) without database migrations.
+
+**Status:** Production — actively used for the real CEII fundraising campaign.
+
+---
+
+## Features
+
+- 💱 **Multi-currency display** — real-time conversion to USD, VES BCV, VES Paralelo, EUR, and COP
+- 📊 **Live progress bar** — reflects actual donations stored in Supabase with a glowing green visual
+- 💚 **Donate modal** — tabbed interface (Venezuela, International, Colombia, Crypto, Contact) with one-click clipboard copy for payment details
+- 🔐 **Admin panel** — full CRUD for donations, equipment, payment methods, and site config; protected by Supabase Auth
+- 🗂️ **Dynamic payment methods** — admin can add/edit/remove payment methods with custom key-value fields (no code changes required)
+- 🔄 **Exchange rate fallback** — last known rates persisted in Supabase; shown if the external API is unavailable
+- 📱 **Fully responsive** — mobile-first layout, hero adapts from two-column desktop to stacked mobile
+- 🛡️ **Row Level Security** — public users only read active records; write access restricted to authenticated admin at the database level
+- ⚡ **Edge-ready** — deployed on Vercel with ISR revalidation (60s) for near-instant page loads
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | Next.js 14 (App Router, Server Components, Server Actions) |
+| **Language** | TypeScript 5 (strict mode) |
+| **Styling** | Tailwind CSS 3 (utility-first, custom CEII color palette) |
+| **Database** | Supabase — PostgreSQL with Row Level Security |
+| **Auth** | Supabase Auth (email/password, admin-only) |
+| **Deployment** | Vercel (free tier, automatic deploys from GitHub) |
+| **Exchange rates** | [ve.dolarapi.com](https://ve.dolarapi.com) (primary) |
+
+---
+
+## Architecture
+
+```
+┌─────────────┐     HTTPS      ┌──────────────────────┐
+│   Browser   │ ─────────────► │  Next.js on Vercel   │
+└─────────────┘                │  (App Router + ISR)  │
+                               └──────────┬───────────┘
+                                          │
+                          ┌───────────────┼───────────────┐
+                          │               │               │
+                          ▼               ▼               ▼
+                  ┌──────────────┐ ┌──────────┐  ┌─────────────────┐
+                  │   Supabase   │ │  Server  │  │  ve.dolarapi.com│
+                  │  PostgreSQL  │ │ Actions  │  │  (exchange rates)│
+                  │  + Auth/RLS  │ │ (mutate) │  └─────────────────┘
+                  └──────────────┘ └──────────┘
+
+Public routes:   / (home with donate modal)
+Admin routes:    /admin/** (protected by middleware + Supabase session)
+API routes:      /api/rates (proxied exchange rate endpoint)
+```
+
+---
+
+## Local Development
+
+### Prerequisites
+
+- Node.js 18+
+- A [Supabase](https://supabase.com) project (free tier works)
+- Git
+
+### Setup
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/Valduz-Jose/gofoundme-ceii.git
+cd gofoundme-ceii
+
+# 2. Install dependencies
+npm install
+
+# 3. Configure environment variables
+cp .env.example .env.local
+# Edit .env.local with your Supabase credentials
+```
+
+### Environment variables
+
+```env
+# .env.local
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here   # server-side only
+```
+
+### Database setup
+
+Run the SQL migrations in order in your Supabase SQL Editor:
+
+```
+supabase/migrations/001_initial_schema.sql   # core tables
+supabase/migrations/002_payment_methods.sql  # payment methods + RLS
+```
+
+### Run
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# → http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The admin panel is at `/admin`. Create your first user from the Supabase dashboard under **Authentication → Users**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+src/
+├── app/
+│   ├── page.tsx                     # Public home page (Server Component)
+│   ├── admin/
+│   │   ├── actions.ts               # All Server Actions (CRUD)
+│   │   └── (panel)/
+│   │       ├── dashboard/
+│   │       ├── donations/           # Donation management
+│   │       ├── equipment/           # Equipment list
+│   │       ├── payment-methods/     # Payment method CRUD
+│   │       └── settings/            # Site config
+│   └── api/rates/route.ts           # Exchange rate proxy
+├── components/
+│   ├── features/
+│   │   ├── currency-display.tsx     # Multi-currency selector + amounts
+│   │   ├── progress-bar.tsx         # Animated progress bar
+│   │   ├── donate-modal.tsx         # Payment method modal (Client)
+│   │   ├── donate-button.tsx        # Modal trigger (Client)
+│   │   ├── donor-list.tsx           # Public donor list
+│   │   ├── equipment-list.tsx       # Equipment cards
+│   │   └── admin/
+│   │       ├── sidebar.tsx          # Admin navigation
+│   │       ├── form-fields.tsx      # Shared form primitives
+│   │       └── payment-method-form.tsx  # Dynamic fields editor
+│   └── ui/                          # Reusable primitives
+├── lib/
+│   ├── supabase/
+│   │   ├── client.ts                # Browser Supabase client
+│   │   ├── server.ts                # Server + service role clients
+│   │   └── payment-methods.ts       # Data fetching helpers
+│   └── exchange/rates.ts            # Exchange rate logic + caching
+└── types/index.ts                   # Global TypeScript interfaces
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technical Highlights
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Flexible JSONB schema for payment methods** — instead of hard-coding fields per payment type, each method stores its display data as `jsonb`. Adding a new payment method (e.g., a new crypto wallet) requires zero database migrations and no code changes — only an admin form submission.
 
-## Deploy on Vercel
+**Row Level Security at the database layer** — public users (anon role) can only read records where `is_active = true`. Writes and reads of inactive records are exclusively available to the authenticated admin role. Security is enforced at the PostgreSQL level, not just in application code.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Server Components + Server Actions** — the public page fetches all data server-side with no client waterfalls. Mutations (admin CRUD) use Next.js Server Actions, keeping the API surface small and type-safe with no separate REST endpoints to maintain.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**AI-assisted development** — this project was built using an AI-assisted workflow (Claude Code) for accelerated iteration while maintaining strict TypeScript types, security practices, and architectural conventions defined in `CLAUDE.md`.
+
+---
+
+## Roadmap
+
+- [ ] Email notifications when a donation is registered
+- [ ] Export donor list to CSV
+- [ ] EN/ES internationalization (i18n)
+- [ ] Automated tests with Vitest + Testing Library
+- [ ] Dark mode
+- [ ] Donation goal progress widget (embeddable)
+
+---
+
+## Author
+
+**José Valduz**
+Estudiante de Ingeniería en Informática · Universidad Nacional Experimental del Táchira (UNET)
+
+[![GitHub](https://img.shields.io/badge/GitHub-Valduz--Jose-181717?logo=github)](https://github.com/Valduz-Jose)
+[![Email](https://img.shields.io/badge/Email-jose.valduz%40unet.edu.ve-EA4335?logo=gmail&logoColor=white)](mailto:jose.valduz@unet.edu.ve)
+
+---
+
+## License
+
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
+
+---
+
+<div align="center">
+Built with 💚 for the students of CEII
+</div>
