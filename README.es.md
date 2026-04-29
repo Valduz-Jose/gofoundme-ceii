@@ -13,7 +13,8 @@
 
 <br>
 
-![GoFundMe CEII preview](public/preview.png)
+GoFundMe CEII preview
+<img width="1188" height="463" alt="Captura de pantalla 2026-04-29 090942" src="https://github.com/user-attachments/assets/98c61fac-11db-468c-9dbb-5aaeeb86b1f3" />
 
 <div align="center">
 
