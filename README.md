@@ -13,7 +13,8 @@
 
 <br>
 
-![GoFundMe CEII preview](public/preview.png)
+GoFundMe CEII preview
+<img width="1188" height="463" alt="image" src="https://github.com/user-attachments/assets/05767bb1-7e81-428d-a92b-cfdf25a5ae32" />
 
 <div align="center">
 
