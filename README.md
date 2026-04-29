@@ -204,7 +204,7 @@ src/
 ## Author
 
 **José Valduz**
-Computer Engineering student · Universidad Nacional Experimental del Táchira (UNET)
+Computer Engineering graduate · Universidad Nacional Experimental del Táchira (UNET)
 
 [![GitHub](https://img.shields.io/badge/GitHub-Valduz--Jose-181717?logo=github)](https://github.com/Valduz-Jose)
 [![Email](https://img.shields.io/badge/Email-jose.valduz%40unet.edu.ve-EA4335?logo=gmail&logoColor=white)](mailto:jose.valduz@unet.edu.ve)
