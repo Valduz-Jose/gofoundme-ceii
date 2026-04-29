@@ -1,4 +1,6 @@
-# GoFundMe CEII — Plataforma de Recaudación de Fondos
+# GoFundMe CEII — Fundraising Platform
+
+📖 Read this in: **English** | [Español](./README.es.md)
 
 > A full-stack fundraising platform with real-time progress tracking, multi-currency display, and a complete admin panel — built for a real campaign.
 
@@ -23,7 +25,7 @@
 
 ## About
 
-**El Centro de Informática CEII** es la organización estudiantil de Ingeniería en Informática de la UNET (Venezuela). Con internet limitado o inexistente en su sede, los estudiantes no pueden acceder a recursos en línea, herramientas de desarrollo ni comunicarse con el exterior. Esta plataforma fue creada para recaudar **$1,329 USD** destinados a la compra e instalación de un kit Starlink y la infraestructura de red necesaria.
+**CEII** (Centro de Estudiantes de Ingeniería en Informática) is the student organization for the Computer Engineering program at UNET (Universidad Nacional Experimental del Táchira, Venezuela). With limited or no internet access at their headquarters, students cannot reach online resources, development tools, or communicate with the outside world. This platform was created to raise **$1,329 USD** for the purchase and installation of a Starlink kit and the necessary network infrastructure.
 
 Technically, this project goes beyond a simple donation page. It features a **live exchange rate engine** that converts the fundraising goal and progress into VES (BCV and parallel rates), EUR, and COP — currencies that donors actually use. All conversion data is pulled from the Venezuelan exchange rate API (`ve.dolarapi.com`) and cached intelligently with Next.js revalidation.
 
@@ -202,7 +204,7 @@ src/
 ## Author
 
 **José Valduz**
-Estudiante de Ingeniería en Informática · Universidad Nacional Experimental del Táchira (UNET)
+Computer Engineering student · Universidad Nacional Experimental del Táchira (UNET)
 
 [![GitHub](https://img.shields.io/badge/GitHub-Valduz--Jose-181717?logo=github)](https://github.com/Valduz-Jose)
 [![Email](https://img.shields.io/badge/Email-jose.valduz%40unet.edu.ve-EA4335?logo=gmail&logoColor=white)](mailto:jose.valduz@unet.edu.ve)
